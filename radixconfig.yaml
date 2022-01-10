@@ -1,0 +1,67 @@
+apiVersion: radix.equinor.com/v1
+kind: RadixApplication
+metadata:
+  name: radix-aspnet-test-app-1546
+spec:
+  environments:
+    - name: dev
+      build:
+        from: main
+    - name: prod
+      build:
+        from: main
+    - name: demo
+  components:
+    - name: server
+      src: ./RedixAPI
+      ports:
+        - name: http
+          port: 80
+      variables:
+        PORT: 80
+        GREETING_MESSAGE: "Hello there"
+      runAsNonRoot: true
+      environmentConfig:
+        - environment: prod
+          variables:
+            GREETING_MESSAGE: "Hello and welcome to the PROD environment"
+          runAsNonRoot: true
+        - environment: demo
+          variables:
+            GREETING_MESSAGE: "Hello and welcome to the DEMO environment"
+          runAsNonRoot: true
+    - name: www
+      src: ./redixfrontend
+      ports:
+        - name: http
+          port: 3000
+      publicPort: http
+      resources:
+        requests:
+          memory: "50M"
+          cpu: "50m"
+        limits:
+          memory: "50M"
+          cpu: "50m"
+      variables:
+        PORT: 3000
+        ECHO_URL: "http://server"
+      environmentConfig:
+        - environment: prod
+          runAsNonRoot: true        
+          resources:
+            requests:
+              memory: "250M"
+              cpu: "50m"
+            limits:
+              memory: "500M"
+              cpu: "50m"
+          replicas: 2
+          horizontalScaling:
+            minReplicas: 2
+            maxReplicas: 5
+        - environment: demo
+          runAsNonRoot: true
+  dnsAppAlias:
+    environment: prod
+    component: www
