@@ -7,7 +7,7 @@ function App() {
   const [state, setState] = useState("");
   useEffect(() => {
     console.log("Hello there");
-    fetch("http://server/WeatherForecast").then( res => res.json()).then(data => setState(
+    fetch("https://server:3002/WeatherForecast").then( res => res.json()).then(data => setState(
       JSON.stringify( data)
       ));
   }, []);
