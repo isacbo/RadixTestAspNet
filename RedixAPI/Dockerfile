@@ -16,4 +16,5 @@ RUN dotnet publish "RedixAPI.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+USER 1000
 ENTRYPOINT ["dotnet", "RedixAPI.dll"]
