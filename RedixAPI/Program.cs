@@ -7,6 +7,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
+//builder.WebHost.UseUrls("http://localhost:3002");
+builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(3002));
 
 var app = builder.Build();
 
